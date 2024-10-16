@@ -314,7 +314,7 @@ def write_steps_to_file(min_step, max_step, filename='cron_step_record'):
         file.write(f'max_step={max_step}\n')
 
 
-def read_steps_from_file(filename='cron_stop_record'):
+def read_steps_from_file(filename='cron_step_record'):
     steps = {}
     with open(filename, 'r') as file:
         for line in file:
