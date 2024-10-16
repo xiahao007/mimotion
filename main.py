@@ -40,7 +40,7 @@ def get_min_max_by_time(hour=None, minute=None):
     time_rate = min((hour * 60 + minute) / (22 * 60), 1)
     min_step = get_int_value_default(config, 'MIN_STEP', 18000), 
     max_step = get_int_value_default(config, 'MAX_STEP', 25000)
-    return int(time_rate * min_step), int(time_rate * max_step)
+    return int(time_rate * min_step), int(max_step)
 
 
 # 虚拟ip地址
@@ -308,6 +308,21 @@ def execute():
         exit(1)
 
 
+def write_steps_to_file(min_step, max_step, filename='cron_stop_record.txt'):
+    with open(filename, 'w') as file:
+        file.write(f'min_step={min_step}\n')
+        file.write(f'max_step={max_step}\n')
+
+
+def read_steps_from_file(filename='cron_stop_record.txt'):
+    steps = {}
+    with open(filename, 'r') as file:
+        for line in file:
+            key, value = line.strip().split('=')
+            steps[key] = int(value)
+    return steps
+    
+
 if __name__ == "__main__":
     # 北京时间
     time_bj = get_beijing_time()
@@ -336,7 +351,11 @@ if __name__ == "__main__":
             print("未正确配置账号密码，无法执行")
             exit(1)
         min_step, max_step = get_min_max_by_time()
-        use_concurrent = config.get('USE_CONCURRENT')
+        steps = read_steps_from_file()
+        last_min_step, last_max_step = int(steps['min_step']), int(steps['max_step'])
+        min_step = max(min_step, last_min_step)
+        
+        use_concurrent = config.get('USE_CONCURRENT') 
         if use_concurrent is not None and use_concurrent == 'True':
             use_concurrent = True
         else:
