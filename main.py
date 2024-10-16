@@ -308,13 +308,13 @@ def execute():
         exit(1)
 
 
-def write_steps_to_file(min_step, max_step, filename='cron_stop_record.txt'):
+def write_steps_to_file(min_step, max_step, filename='cron_step_record'):
     with open(filename, 'w') as file:
         file.write(f'min_step={min_step}\n')
         file.write(f'max_step={max_step}\n')
 
 
-def read_steps_from_file(filename='cron_stop_record.txt'):
+def read_steps_from_file(filename='cron_stop_record'):
     steps = {}
     with open(filename, 'r') as file:
         for line in file:
@@ -353,7 +353,7 @@ if __name__ == "__main__":
         min_step, max_step = get_min_max_by_time()
         steps = read_steps_from_file()
         last_min_step, last_max_step = int(steps['min_step']), int(steps['max_step'])
-        min_step = max(min_step, last_min_step)
+        min_step = max(min_step, last_max_step)
         
         use_concurrent = config.get('USE_CONCURRENT') 
         if use_concurrent is not None and use_concurrent == 'True':
