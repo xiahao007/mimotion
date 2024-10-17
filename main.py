@@ -40,7 +40,7 @@ def get_min_max_by_time(hour=None, minute=None):
     time_rate = min((hour * 60 + minute) / (22 * 60), 1)
     min_step = get_int_value_default(config, 'MIN_STEP', 18000)
     max_step = get_int_value_default(config, 'MAX_STEP', 25000)
-    return int(time_rate * min_step), int(1 * max_step)
+    return int(time_rate * min_step), int(time_rate * max_step)
 
 
 # 虚拟ip地址
@@ -200,6 +200,7 @@ class MiMotionRunner:
         if self.invalid:
             return "账号或密码配置有误", False
         step = str(random.randint(min_step, max_step))
+        write_steps_to_file(min_step, step)
         self.log_str += f"已设置为随机步数范围({min_step}~{max_step}) 随机值:{step}\n"
         login_token, userid = self.login()
         if login_token == 0:
