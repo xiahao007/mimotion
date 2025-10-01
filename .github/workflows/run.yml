@@ -2,7 +2,7 @@ name: flush-step
 
 on:
   schedule:
-    - cron: '18 4,9,12 * * *'
+    - cron: '19 9,12,14 * * *'
   workflow_dispatch:
 
 jobs:
